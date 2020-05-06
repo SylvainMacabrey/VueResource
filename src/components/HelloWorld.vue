@@ -11,11 +11,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in users">
+        <tr v-for="user in users" :key="user.id">
           <td><input class="form-control" type="text" v-model="user.name"/></td>
           <td>{{ user.email }}</td>
           <td>{{ user.address.city }} - {{ user.address.street }}</td>
           <td>
+            <router-link type="button" class="btn btn-primary btn-tab" :to="{name: 'User', params: {id: user.id}}">En savoir plus</router-link>
             <button type="button" class="btn btn-warning btn-tab" @click="save(user)">Modifier</button>
             <button type="button" class="btn btn-danger btn-tab" @click="destroy(user)">Supprimer</button>
           </td>
@@ -35,7 +36,7 @@ export default {
     }
   },
   methods: {
-    save(user) {
+    save (user) {
       this.$user.update({id: user.id}, {name: user.name}).then(
         (response) => {
 
@@ -45,7 +46,7 @@ export default {
         }
       )
     },
-    destroy(user) {
+    destroy (user) {
       this.$user.remove({id: user.id}).then(
         (response) => {
           this.users = this.users.filter(u => u !== user)
@@ -56,7 +57,7 @@ export default {
       )
     }
   },
-  mounted() {
+  mounted () {
     this.$user = this.$resource('https://jsonplaceholder.typicode.com/users{/id}')
     this.$user.query().then(
       (response) => {
